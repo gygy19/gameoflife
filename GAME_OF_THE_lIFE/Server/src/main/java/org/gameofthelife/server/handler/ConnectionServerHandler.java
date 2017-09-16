@@ -14,6 +14,10 @@ public class ConnectionServerHandler {
 	@MessageHandlerController(SetSettingsMessage.MESSAGE_ID)
 	public static boolean handleSettingsMessage(TcpClient client, SetSettingsMessage message) {
 		
+		if (client.getGame() != null) {
+			client.getGame().removeTcpClient(client);
+		}
+		
 		if (message.interval_life < 1 || message.interval_life > 5) {
 			//error interval_life
 		}

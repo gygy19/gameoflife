@@ -2,35 +2,48 @@ package org.gameofthelife.client;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
 
 import org.gameofthelife.client.network.SocketClient;
 import org.gameofthelife.client.network.TcpDataHandler;
 import org.gameofthelife.client.network.handler.NetworkMessageHandler;
-import org.gameofthelife.client.network.messages.SetSettingsMessage;
-import org.gameofthelife.graphics.objects.Graphics;
-import org.gameofthelife.graphics.objects.Particl;
+import org.gameofthelife.graphics.objects.MainMenu;
 
 public class Main 
 {
+	public static final int MIN_MAP_SIZE = 10;
+	public static final int MAX_REFRESH_TIME = 1000 / 60;
+	public static final int MAX_POPULATION = 8;
+	
 	public static SocketClient sockClient = null;
 	public static TcpDataHandler handler = new NetworkMessageHandler();
 	public static boolean connected = false;
+	public static Gameofthelife game = null;
+	
+	public static String	hostname;
+	public static int		port;
+	
+	public static int mapX = 100;
+	public static int mapY = 100;
+	public static int refreshTime = 1000 / 10;
+	public static int population_max_life = 3;
 	
     public static void main(String[] args)
     {
-    	/*if (args.length != 2) {
-    		return ;
-    	}*/
+    	mainMenu("");
     	start();
+    }
+    
+    public static void mainMenu(String error) {
+    	MainMenu menu = new MainMenu(error);
+    	
+    	while (menu.wait == true) {
+    		try {Thread.sleep(100);} catch (InterruptedException e) {}
+    	}
     }
     
     public static boolean start() {
     	try {
-    	sockClient = new SocketClient("127.0.0.1", 5555);
+    	sockClient = new SocketClient(hostname, port);
     	} catch (UnknownHostException e) {
     		//Error host
     		return true;
@@ -44,12 +57,11 @@ public class Main
 			handler.handleTcpData(sockClient.getSession());
     		
     	} else {
-    		try {Thread.sleep(100);} catch (InterruptedException e) {}
+    		mainMenu("Server disconnected.");
     		start();
     	}
     	
     	} catch (IOException e)  {
-    		e.printStackTrace();
     		try {
 	    		if (!sockClient.getSession().isClosed()) {
 					sockClient.getSession().close();
@@ -57,102 +69,19 @@ public class Main
     		} catch (IOException e2) {
     			e2.printStackTrace();
     		}
-    		return false;
+    		serverDisconnected();
+    		return start();
     	}
     	return true;
     }
     
-   /* private static ArrayList<Particl> particls = new ArrayList<Particl>();
-    private static Map<String, Particl> particlsMap = new HashMap<String, Particl>();
-    
-    public static void load_start_particls(Graphics graph) {
-    	
-    	for (int i = 0; i < 1500; i++) {
-    	
-    		int x = getRandomValue(1, graph.getmaxX());
-    		int y = getRandomValue(1, graph.getmaxY());
-    		
-    		Particl p = new Particl(x, y);
-    		if (particlsMap.containsKey(x + "" + y)) {
-    			i--;
-    			continue ;
-    		}
-    		particlsMap.put(x + "" + y, p);
-    		particls.add(p);
+    public static void serverDisconnected() {
+    	if (Main.game != null) {
+    		Main.game.close();
+    		Main.game = null;
     	}
-    	
-    	for (Particl p : particls) {
-    		graph.addParticl(p);
-    	}
-    	graph.refresh();
+    	Main.connected = false;
+    	Main.sockClient = null;
+    	Main.mainMenu("Server connection interrupted.");
     }
-    
-    public static void update_particls(Graphics graph) {
-    	ArrayList<Particl> newparticls = new ArrayList<Particl>();
-		Map<String, Particl> newparticlsMap = new HashMap<String, Particl>();	
-	
-		for (int y = 0; y < graph.getmaxY(); y++) {
-			for (int x = 0; x < graph.getmaxX(); x++) {
-				
-	    		boolean hasParticl = false;
-	    		int colled = 0;
-	    		
-	    		if (particlsMap.containsKey(x + "" + y)) {
-	    			hasParticl = true;
-	    		}
-	    		if (particlsMap.containsKey((x - 1) + "" + (y))) {//left
-	    			colled++;
-	    		}
-	    		if (particlsMap.containsKey((x + 1) + "" + (y))) {//right
-	    			colled++;
-	    		}
-	    		if (particlsMap.containsKey((x) + "" + (y - 1))) {//up
-	    			colled++;
-	    		}
-	    		if (particlsMap.containsKey((x) + "" + (y + 1))) {//down
-	    			colled++;
-	    		}
-	    		if (particlsMap.containsKey((x + 1) + "" + (y - 1))) {//up right
-	    			colled++;
-	    		}
-	    		if (particlsMap.containsKey((x - 1) + "" + (y - 1))) {//up left
-	    			colled++;
-	    		}
-	    		if (particlsMap.containsKey((x + 1) + "" + (y + 1))) {//down right
-	    			colled++;
-	    		}
-	    		if (particlsMap.containsKey((x - 1) + "" + (y + 1))) {//down left
-	    			colled++;
-	    		}
-	    		if (colled > 3 && hasParticl) {
-	    			continue ;
-	    		}
-	    		if (colled <= 1 && hasParticl) {
-	    			continue ;
-	    		}
-	    		if (colled == 3  && hasParticl == false || hasParticl) {
-		    		
-		    		Particl p = new Particl(x, y);
-		    		newparticlsMap.put(x + "" + y, p);
-		    		newparticls.add(p);
-	    		}
-			}
-		}
-		particlsMap = newparticlsMap;
-		graph.resetParticls();
-    	for (Particl p : newparticls) {
-    		graph.addParticl(p);
-    	}
-    	graph.refresh();
-    }*/
-    
-    
-    
-    public static int getRandomValue(int i1, int i2)
-	{
-		if (i2 < i1)
-			return 0;
-		Random rand = new Random();
-		return (rand.nextInt((i2 - i1) + 1)) + i1;
-	}
 }

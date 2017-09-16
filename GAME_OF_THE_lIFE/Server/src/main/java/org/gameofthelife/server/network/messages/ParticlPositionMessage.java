@@ -25,13 +25,13 @@ public class ParticlPositionMessage extends NetworkMessage {
 		return "StartPositionParticlMessage";
 	}
 	
-	public ParticlPositionMessage(Collection<Particl> particls) {
-		this.particls = particls;
-	}
-	
 	public ParticlPositionMessage(byte[] data) {
 		super();
 		this.data = data;
+	}
+	
+	public ParticlPositionMessage(Collection<Particl> particls) {
+		this.particls = particls;
 	}
 
 	@Override
@@ -43,8 +43,8 @@ public class ParticlPositionMessage extends NetworkMessage {
 		
 		for (int i = 0; i < arraySize; i++) {
 			
-			int x = buffer.getInt();
-			int y = buffer.getInt();
+			int x = buffer.getShort();
+			int y = buffer.getShort();
 			
 			Particl p = new Particl(x, y);
 			particls.add(p);
@@ -53,14 +53,14 @@ public class ParticlPositionMessage extends NetworkMessage {
 
 	@Override
 	public void serialize() {
-		ByteBuffer buffer = ByteBuffer.allocate(8 + ((particls.size() * 2) * 8));
+		ByteBuffer buffer = ByteBuffer.allocate(8 + ((particls.size() * 2) * 2));
 		
 		buffer.putInt(particls.size());
 		
 		for (Particl p : particls) {
 			
-			buffer.putInt(p.x());
-			buffer.putInt(p.y());
+			buffer.putShort((short)p.x());
+			buffer.putShort((short)p.y());
 		}
 		this.data = buffer.array();
 	}

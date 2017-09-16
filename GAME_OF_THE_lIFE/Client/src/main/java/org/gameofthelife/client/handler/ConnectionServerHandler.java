@@ -15,11 +15,7 @@ public class ConnectionServerHandler {
 	public static boolean handleSettingsMessage(HelloMessage message) {
 		
 		System.out.println("Receive hello message");
-		try {
-		Main.sockClient.sendMessage(new SetSettingsMessage(500, 500, 1000, 3));
-		} catch (IOException e) {
-			return false;
-		}
+		Main.sockClient.sendMessage(new SetSettingsMessage(Main.mapX, Main.mapY, Main.refreshTime, Main.population_max_life));
 		return true;
 	}
 }

@@ -2,32 +2,40 @@ package org.gameofthelife.graphics.objects;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.geom.Line2D;
-import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
-public class Graphics extends JPanel{
+import org.gameofthelife.client.Gameofthelife;
+import org.gameofthelife.client.Main;
+import org.gameofthelife.client.network.messages.AddOneParticlMessage;
+import org.gameofthelife.graphics.objects.interfaces.PaintingInterface;
+
+public class Graphics extends JPanel implements MouseListener, KeyListener {
 	
 	private int sizeX;
 	private int sizeY;
-	private int particl_size;
 	private Window win;
-	private int maxCaseIdX;
-	private int maxCaseIdY;
+	private int zoom;
+	private PaintingInterface paintClass;
+	private MenuBar menu;
 	
-	private ArrayList<Particl> particls = new ArrayList<Particl>();
-	
-	public Graphics(int sizeX, int sizeY, int particl_size) {
+	public Graphics(int sizeX, int sizeY, int zoom, PaintingInterface paintClass) {
 		super();
 		this.sizeX = sizeX;
 		this.sizeY = sizeY;
-		this.particl_size = particl_size;
-		this.maxCaseIdX = this.sizeX / particl_size;
-		this.maxCaseIdX = this.sizeY / particl_size;
+		this.zoom = zoom;
+		this.paintClass = paintClass;
+		this.menu = new MenuBar();
 		this.win = new Window(sizeX, sizeY);
 		this.win.add(this);
-		this.win.setVisible(true);
+		this.win.setJMenuBar(this.menu);
+		this.addMouseListener(this);
+		this.win.addKeyListener(this);
 	}
 	
 	public int getsizeX() {
@@ -38,16 +46,16 @@ public class Graphics extends JPanel{
 		return (this.sizeY);
 	}
 	
-	public int getMaxCaseIdX() {
-		return (this.maxCaseIdX);
-	}
-	
-	public int getMaxCaseIdY() {
-		return (this.maxCaseIdY);
-	}
-	
 	public void refresh() {
 		this.win.repaint();
+	}
+	
+	public int getZoom() {
+		return (this.zoom);
+	}
+	
+	public void display(boolean visible) {
+		this.setVisible(visible);
 	}
 	
 	protected void paintComponent(java.awt.Graphics g)
@@ -55,11 +63,7 @@ public class Graphics extends JPanel{
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
 		
-		//loadGrid(g2);
-		
-		for (Particl p : this.particls) {
-			p.paint(g2, this.particl_size);
-		}
+		paintClass.paintLoop(g2);
 	}
 	
 	private void loadGrid(Graphics2D g2) {
@@ -81,12 +85,67 @@ public class Graphics extends JPanel{
 		}
 	}
 	
-	public void addParticls(ArrayList<Particl> p) {
-	this.particls = p;
+	public void setgenerationCount(int gcount) {
+		menu.setgenerationCount(gcount);
 	}
 	
-	public void resetParticls() {
-		this.particls.clear();
+	public void setparticlsCount(int count) {
+		menu.setparticlsCount(count);
+	}
+	
+	public void close() {
+		this.display(false);
+		this.win.setVisible(false);
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		if (e.getButton() == MouseEvent.BUTTON1) {
+			int x = (e.getX() / Main.game.getZoom());
+			int y = (e.getY() / Main.game.getZoom());
+			
+			Particl p = new Particl(x, y);
+			//System.out.println("x:" + x + " y:" + y);
+			Main.sockClient.sendMessage(new AddOneParticlMessage(p));
+		}
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+			Main.game.setPause();
+		}
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
 	}
 
 }

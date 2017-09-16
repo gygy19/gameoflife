@@ -3,7 +3,9 @@ package org.gameofthelife.client.network.messages;
 import java.nio.ByteBuffer;
 
 import org.gameofthelife.client.network.NetworkMessage;
+import org.gameofthelife.client.network.handler.reflexion.MessageHandlerController;
 
+@MessageHandlerController(4)
 public class NewMapMessage extends NetworkMessage {
 
 	public static final int MESSAGE_ID = 4;

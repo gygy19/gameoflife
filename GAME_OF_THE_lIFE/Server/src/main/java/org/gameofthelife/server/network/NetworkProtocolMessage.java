@@ -2,20 +2,24 @@ package org.gameofthelife.server.network;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
 
 import org.gameofthelife.server.network.messages.DefaultNetworkMessage;
 
 public class NetworkProtocolMessage {
 
-	public static int STATIC_HEADER_LEN = 2;
+public static int STATIC_HEADER_LEN = 4;
 	
 	public static int readMessageLen(byte[] len) {
-		return (((len[0] & 0xFF) << 8) | (len[1] & 0xFF));
+		ByteBuffer buffer = ByteBuffer.wrap(len);
+		
+		return (buffer.getInt());
     }
 	
 	public static DefaultNetworkMessage readHeader(InputStream socketIn) throws IOException {
 		
 		byte[] headerbyte = new byte[NetworkProtocolMessage.STATIC_HEADER_LEN];
+		ByteBuffer buffer;
     	int header = 0;
     	int datalen = 0;
     	byte[] messageLenBuffer = new byte[0];
@@ -42,23 +46,22 @@ public class NetworkProtocolMessage {
     		socketIn.read(headerbyte);
     	}
     	
-    	header = (headerbyte[0] & 0xFF) << 8 | (headerbyte[1] & 0xFF);
+    	buffer = ByteBuffer.wrap(headerbyte);
+    	header = buffer.getInt();
     	
-    	while (socketIn.available() < 2)
+    	while (socketIn.available() < 4)
     		try {Thread.sleep(10);} catch (InterruptedException e) {}
-    	messageLenBuffer = new byte[2];
+    	messageLenBuffer = new byte[4];
         socketIn.read(messageLenBuffer);
 		datalen = readMessageLen(messageLenBuffer);
 		return (new DefaultNetworkMessage(header, datalen));
 	}
 	
 	public static byte[] writeHeader(int packetId, int len) {
-		byte[] header = new byte[4];
+		ByteBuffer buffer = ByteBuffer.allocate(8);
 		
-		header[0] = (byte)(packetId >> 8);
-        header[1] = (byte)(packetId);
-        header[2] = (byte)(len >> 8);
-        header[3] = (byte)(len);
-        return (header);
+		buffer.putInt(packetId);
+		buffer.putInt(len);
+        return (buffer.array());
 	}
 }

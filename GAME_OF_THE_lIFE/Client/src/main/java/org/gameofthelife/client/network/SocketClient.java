@@ -5,6 +5,8 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import org.gameofthelife.client.Main;
+
 public class SocketClient {
 	
 	private Socket		session;
@@ -21,7 +23,7 @@ public class SocketClient {
 		try {
 			this.session = new Socket(inetaddr, port);
 		} catch (IOException e) {
-			//e.printStackTrace();
+			Main.connected = false;
 			return (false);
 		}
 		return (true);
@@ -31,12 +33,18 @@ public class SocketClient {
 		return (this.session);
 	}
 	
-	public void sendMessage(NetworkMessage message) throws IOException {
-		message.serialize();
-		message.serializeHeader();
-        byte[] messageContent = message.getData();
-        
-        System.out.println("message " + message.getTypeId() + " sended size: " + messageContent.length);
-        this.session.getOutputStream().write(messageContent, 0, messageContent.length);
+	public void sendMessage(NetworkMessage message) {
+		try {
+			if (Main.connected) {
+				message.serialize();
+				message.serializeHeader();
+		        byte[] messageContent = message.getData();
+		        
+		        System.out.println("message " + message.getTypeId() + " sended size: " + messageContent.length);
+		        this.session.getOutputStream().write(messageContent, 0, messageContent.length);
+			}
+		} catch (IOException e) {
+			Main.connected = false;
+		}
 	}
 }

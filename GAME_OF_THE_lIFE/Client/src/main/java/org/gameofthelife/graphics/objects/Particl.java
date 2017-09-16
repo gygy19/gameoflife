@@ -20,10 +20,10 @@ public class Particl{
 	}
 	
 	
-	protected void paint(Graphics2D g, int size)
+	public void paint(Graphics2D g, int zoom)
 	{
-		g.setColor(Color.RED);
-        g.fillRect(this.x * 2, this.y * 2, 2, 2);
+		g.setColor(Color.DARK_GRAY);
+        g.fillRect(this.x * zoom, this.y * zoom, 1 * zoom, 1 * zoom);
 	}
 	
 	public int x() {

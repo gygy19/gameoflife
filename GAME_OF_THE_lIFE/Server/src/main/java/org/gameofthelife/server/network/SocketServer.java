@@ -43,6 +43,9 @@ public class SocketServer implements Runnable {
                         dataHandler.handleTcpData(newClient);
                     } catch (IOException e)
                     {
+                    	if (newClient.getGame() != null) {
+                    		newClient.getGame().removeTcpClient(newClient);
+                    	}
                     	System.out.println("Client Disconnected");
                     }
                 }).start();

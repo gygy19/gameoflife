@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
 
+import org.gameofthelife.client.Main;
 import org.gameofthelife.client.handler.factory.ClientMessageHandler;
 import org.gameofthelife.client.network.NetworkMessage;
 import org.gameofthelife.client.network.NetworkProtocolMessage;
@@ -20,7 +21,7 @@ public class NetworkMessageHandler implements TcpDataHandler {
 	
 	public void handleTcpData(Socket sock) throws IOException {
 		
-		while (!sock.isClosed())
+		while (!sock.isClosed() && Main.connected)
         {
             readMessage(sock.getInputStream());
             
@@ -31,10 +32,8 @@ public class NetworkMessageHandler implements TcpDataHandler {
             NetworkMessage message = this.messageFactory.createMessage(this._message);
             
             if (message == null) {
-            	System.out.println("Message [" + this._message.getTypeId() + "] doesn't exist");
             	continue ;
             }
-            System.out.println("new Message [" + message.getTypeId() + "]");
             message.deserialize();
             
             if (!clientMessageHandler.handleMessage(message)) {
@@ -47,10 +46,7 @@ public class NetworkMessageHandler implements TcpDataHandler {
 		if (!this._splittedPacket) {
 			this._message = NetworkProtocolMessage.readHeader(socketIn);//wait new message
 			
-			
-			System.out.println("MessageID : " + this._message.getTypeId());
 			int packetLen = this._message.getPacketLen();
-			System.out.println("Messagelen : " + packetLen);
 			if (packetLen <= 0)
 				return ;
 			if (socketIn.available() < packetLen) {
@@ -60,11 +56,18 @@ public class NetworkMessageHandler implements TcpDataHandler {
 			byte[] messagePartBuffer = new byte[packetLen];
 	        int readed = socketIn.read(messagePartBuffer);
 	        
-	        if (readed < this._message.getPacketLen())
+	        byte[] messageBuffer = new byte[readed];
+	        
+	        System.arraycopy(messagePartBuffer, 0, messageBuffer, 0, readed);
+	        
+	        if (readed < this._message.getPacketLen()) {
 	        	this._splittedPacket = true;
-	        if (readed == 0)
+	        }
+	        if (readed == 0) {
+	        	this._message.setData(new byte[0]);
 	        	return ;
-	        this._message.setData(messagePartBuffer);
+	        }
+	        this._message.setData(messageBuffer);
 		} else {
 			if (socketIn.available() <= 0)
 				return ;
@@ -72,14 +75,14 @@ public class NetworkMessageHandler implements TcpDataHandler {
 			int partLen = packetLen - this._message.getData().length;
 			
 			byte[] messagePartBuffer = new byte[partLen];
-			byte[] messageBuffer = new byte[packetLen];
 	        int readed = socketIn.read(messagePartBuffer);
+	        
+	        byte[] messageBuffer = new byte[readed + this._message.getData().length];
 	        
 	        System.arraycopy(this._message.getData(), 0, messageBuffer, 0, this._message.getData().length);
 	        System.arraycopy(messagePartBuffer, 0, messageBuffer, this._message.getData().length, readed);
 	        this._message.setData(messageBuffer);
-			
-			if (readed >= partLen) {
+			if (messageBuffer.length >= packetLen) {
 		        this._splittedPacket = false;
 			}
 		}

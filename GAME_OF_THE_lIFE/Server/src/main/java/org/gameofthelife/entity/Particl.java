@@ -1,6 +1,6 @@
 package org.gameofthelife.entity;
 
-import java.util.Map;
+import org.gameofthelife.Game;
 
 public class Particl {
 	
@@ -24,24 +24,25 @@ public class Particl {
 		return (this.x + "" + this.y);
 	}
 	
-	public static int checkHasOppositeParticls(Map<String, Particl> map, int x, int y) {
+	public static int checkHasOppositeParticls(Game game, int x, int y) {
 		int oppositeParticls = 0;
+		int[][] map = game.getMap();
 		
-		if (map.containsKey((x) + "" + (y + 1)))//south
+		if (!game.isOutofMap(x, y + 1) && map[y + 1][x] == 1)//south
 			oppositeParticls++;
-		if (map.containsKey((x) + "" + (y - 1)))//north
+		if (!game.isOutofMap(x, y - 1) && map[y - 1][x] == 1)//north
 			oppositeParticls++;
-		if (map.containsKey((x + 1) + "" + (y)))//est
+		if (!game.isOutofMap(x + 1, y) && map[y][x + 1] == 1)//est
 			oppositeParticls++;
-		if (map.containsKey((x - 1) + "" + (y)))//west
+		if (!game.isOutofMap(x - 1, y) && map[y][x - 1] == 1)//west
 			oppositeParticls++;
-		if (map.containsKey((x - 1) + "" + (y - 1)))//north west
+		if (!game.isOutofMap(x - 1, y - 1) && map[y - 1][x - 1] == 1)//north west
 			oppositeParticls++;
-		if (map.containsKey((x + 1) + "" + (y - 1)))//north est
+		if (!game.isOutofMap(x + 1, y - 1) && map[y - 1][x + 1] == 1)//north est
 			oppositeParticls++;
-		if (map.containsKey((x - 1) + "" + (y + 1)))//south west
+		if (!game.isOutofMap(x - 1, y + 1) && map[y + 1][x - 1] == 1)//south west
 			oppositeParticls++;
-		if (map.containsKey((x + 1) + "" + (y + 1)))//south est
+		if (!game.isOutofMap(x + 1, y + 1) && map[y + 1][x + 1] == 1)//south est
 			oppositeParticls++;
 		
 		return (oppositeParticls);

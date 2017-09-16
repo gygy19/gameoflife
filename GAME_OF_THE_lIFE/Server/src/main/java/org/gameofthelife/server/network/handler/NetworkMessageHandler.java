@@ -54,10 +54,7 @@ public class NetworkMessageHandler implements TcpClientDataHandler {
 		if (!this._splittedPacket) {
 			this._message = NetworkProtocolMessage.readHeader(socketIn);//wait new message
 			
-			
-			System.out.println("MessageID : " + this._message.getTypeId());
 			int packetLen = this._message.getPacketLen();
-			System.out.println("Messagelen : " + packetLen);
 			if (packetLen <= 0)
 				return ;
 			if (socketIn.available() < packetLen) {
@@ -67,11 +64,18 @@ public class NetworkMessageHandler implements TcpClientDataHandler {
 			byte[] messagePartBuffer = new byte[packetLen];
 	        int readed = socketIn.read(messagePartBuffer);
 	        
-	        if (readed < this._message.getPacketLen())
+	        byte[] messageBuffer = new byte[readed];
+	        
+	        System.arraycopy(messagePartBuffer, 0, messageBuffer, 0, readed);
+	        
+	        if (readed < this._message.getPacketLen()) {
 	        	this._splittedPacket = true;
-	        if (readed == 0)
+	        }
+	        if (readed == 0) {
+	        	this._message.setData(new byte[0]);
 	        	return ;
-	        this._message.setData(messagePartBuffer);
+	        }
+	        this._message.setData(messageBuffer);
 		} else {
 			if (socketIn.available() <= 0)
 				return ;
@@ -79,14 +83,14 @@ public class NetworkMessageHandler implements TcpClientDataHandler {
 			int partLen = packetLen - this._message.getData().length;
 			
 			byte[] messagePartBuffer = new byte[partLen];
-			byte[] messageBuffer = new byte[packetLen];
 	        int readed = socketIn.read(messagePartBuffer);
+	        
+	        byte[] messageBuffer = new byte[readed + this._message.getData().length];
 	        
 	        System.arraycopy(this._message.getData(), 0, messageBuffer, 0, this._message.getData().length);
 	        System.arraycopy(messagePartBuffer, 0, messageBuffer, this._message.getData().length, readed);
 	        this._message.setData(messageBuffer);
-			
-			if (readed >= partLen) {
+			if (messageBuffer.length >= packetLen) {
 		        this._splittedPacket = false;
 			}
 		}
