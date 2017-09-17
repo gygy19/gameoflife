@@ -34,14 +34,11 @@ public class NetworkMessageHandler implements TcpClientDataHandler {
             if (this._splittedPacket)
             	continue ;
             
-            System.out.println("Message Readed");
             NetworkMessage message = this.messageFactory.createMessage(this._message);
             
             if (message == null) {
-            	System.out.println("Message [" + this._message.getTypeId() + "] doesn't exist");
             	continue ;
             }
-            System.out.println("new Message [" + message.getTypeId() + "]");
             message.deserialize();
             
             if (!serverMessageHandler.handleMessage(client, message)) {

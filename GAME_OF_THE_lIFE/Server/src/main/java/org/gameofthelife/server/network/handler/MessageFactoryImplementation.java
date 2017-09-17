@@ -54,6 +54,7 @@ public class MessageFactoryImplementation {
 					result = (NetworkMessage)c.newInstance(message.getData());
 					break ;
 				}
+				System.out.println("Receive [" + result.getTypeId() + "] \"" + result.getName() + "\"");
 			}
 			else
 			{

@@ -1,7 +1,5 @@
 package org.gameofthelife.server.network;
 
-import java.nio.ByteBuffer;
-
 public abstract class NetworkMessage implements NetworkType{
 	
 	protected byte[] 	data = new byte[0];

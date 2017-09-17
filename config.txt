@@ -1,0 +1,14 @@
+//Gameoflife Config file
+//-flag arg1 arg2 ...
+
+//host ip:port
+-host localhost:5555
+
+//max number of particls life
+-maxAlivePopulation 3
+
+// time in milliseconde for loop generation
+-refresh 100
+
+//size of map x y
+-size 100 100

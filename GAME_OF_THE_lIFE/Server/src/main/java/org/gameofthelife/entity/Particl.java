@@ -1,21 +1,38 @@
 package org.gameofthelife.entity;
 
-import org.gameofthelife.Game;
+import org.gameofthelife.GameOfLife;
 
+/**
+ * @author jguyet
+ * particl Object
+ */
 public class Particl {
 	
 	private int x;
 	private int y;
 	
+	/**
+	 * Constructor
+	 * @param x
+	 * @param y
+	 */
 	public Particl(int x, int y) {
 		this.x = x;
 		this.y = y;
 	}
 	
+	/**
+	 * get x position
+	 * @return
+	 */
 	public int x() {
 		return (x);
 	}
 	
+	/**
+	 * get y position
+	 * @return
+	 */
 	public int y() {
 		return (y);
 	}
@@ -24,7 +41,14 @@ public class Particl {
 		return (this.x + "" + this.y);
 	}
 	
-	public static int checkHasOppositeParticls(Game game, int x, int y) {
+	/**
+	 * STATIC Method for get count 8opposed case alive
+	 * @param game
+	 * @param x
+	 * @param y
+	 * @return
+	 */
+	public static int checkHasOppositeParticls(GameOfLife game, int x, int y) {
 		int oppositeParticls = 0;
 		int[][] map = game.getMap();
 		

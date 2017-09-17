@@ -21,20 +21,34 @@ public class SocketServer implements Runnable {
 		this._t = new Thread(this);
 	}
 	
+	/**
+	 * Start socketServer
+	 * @param ipAddress
+	 * @param portNumber
+	 * @throws IOException
+	 */
 	public void start(String ipAddress, int portNumber) throws IOException {
         serverSocket = new ServerSocket(portNumber, Integer.MAX_VALUE, InetAddress.getByName(ipAddress));
+        System.out.println("Server connection started on [" + ipAddress + ":" + portNumber + "]");
         this._t.start();
     }
 
 	public void run() {
+		accept();
+	}
+	
+	/**
+	 * wait all clients
+	 */
+	private void accept() {
 		while (true)
 		{
 			try {
             	System.out.println("Wainting connection...");
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("new client");
-                TcpClient newClient = new TcpClient(clientSocket);
-                TcpClientDataHandler dataHandler =  new NetworkMessageHandler();
+                final TcpClient newClient = new TcpClient(clientSocket);
+                final TcpClientDataHandler dataHandler =  new NetworkMessageHandler();
                 
                 clients.add(newClient);
                 dataHandler.onClientConnected(newClient);

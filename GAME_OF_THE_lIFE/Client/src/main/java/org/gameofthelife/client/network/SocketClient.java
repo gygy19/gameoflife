@@ -7,6 +7,10 @@ import java.net.UnknownHostException;
 
 import org.gameofthelife.client.Main;
 
+/**
+ * @author jguyet
+ *
+ */
 public class SocketClient {
 	
 	private Socket		session;
@@ -33,6 +37,11 @@ public class SocketClient {
 		return (this.session);
 	}
 	
+	/**
+	 * Send NetworkMessage<br>
+	 * serialize message and header and write on tcp fd
+	 * @param message
+	 */
 	public void sendMessage(NetworkMessage message) {
 		try {
 			if (Main.connected) {
@@ -40,7 +49,7 @@ public class SocketClient {
 				message.serializeHeader();
 		        byte[] messageContent = message.getData();
 		        
-		        System.out.println("message " + message.getTypeId() + " sended size: " + messageContent.length);
+		        System.out.println("Send [" + message.getTypeId() + "] " + message.getName() + " Length [" + messageContent.length + "]");
 		        this.session.getOutputStream().write(messageContent, 0, messageContent.length);
 			}
 		} catch (IOException e) {

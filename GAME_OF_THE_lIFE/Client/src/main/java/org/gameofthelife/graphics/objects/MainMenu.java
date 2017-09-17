@@ -16,10 +16,15 @@ import org.gameofthelife.client.Main;
 
 public class MainMenu extends JPanel implements ActionListener {
 
+	/**
+	 * VERSION
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	private JLabel		lbl_host = new JLabel("Server ip address");
-	private JTextField 	hostField = new JTextField("127.0.0.1", 15);
+	private JTextField 	hostField = new JTextField("" + Main.hostname, 15);
 	private JLabel		lbl_port = new JLabel("Server port");
-	private JTextField 	portField = new JTextField("5555", 4);
+	private JTextField 	portField = new JTextField("" + Main.port, 4);
 	private JLabel		lbl_error = new JLabel("");
 	private Window		win;
 	

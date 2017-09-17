@@ -9,26 +9,34 @@ import org.gameofthelife.graphics.objects.Graphics;
 import org.gameofthelife.graphics.objects.Particl;
 import org.gameofthelife.graphics.objects.interfaces.PaintingInterface;
 
-public class Gameofthelife implements PaintingInterface {
-
-	public static final int DEFAULT_ZOOM = 15;
-	private int sizeX;
-	private int sizeY;
-	private Graphics window;
-	private int generationN = 0;
-	private boolean onPause = false;
-	private int zoom = 1;
+/**
+ * 
+ * @author jguyet
+ * Game grid class
+ */
+public class GameOfLife implements PaintingInterface {
+	
+	private int				sizeX;
+	private int				sizeY;
+	private Graphics		window;
+	private int				generationN = 0;
+	private boolean			onPause = false;
+	private int				zoom = 1;
 	
 	private ArrayList<Particl> particls = new ArrayList<Particl>();
 	
-	public Gameofthelife(int sizeX, int sizeY) {
+	public GameOfLife(int sizeX, int sizeY) {
 		this.sizeX = sizeX;
 		this.sizeY = sizeY;
 		intitialize_zoom();
 		initializeWindow();
 	}
 	
-	public void intitialize_zoom() {
+	/**
+	 * Set zoom by map size
+	 * TODO: a refaire
+	 */
+	private void intitialize_zoom() {
 		if (sizeX < 1000 && sizeY < 1000) {
 			zoom = 2;
 		}
@@ -50,18 +58,29 @@ public class Gameofthelife implements PaintingInterface {
 		if (sizeX < 50 && sizeY < 50) {
 			zoom = 40;
 		}
-		System.out.println(zoom);
 	}
 	
-	public int getZoom() {
-		return (this.zoom);
-	}
-	
-	public void initializeWindow() {
+	/**
+	 * intializer of window
+	 */
+	private void initializeWindow() {
 		window = new Graphics(sizeX * zoom, sizeY * zoom, zoom, this);
 		window.display(true);
 	}
 	
+	/**
+	 * get zoom
+	 * @return
+	 */
+	public int getZoom() {
+		return (this.zoom);
+	}
+	
+	/**
+	 * Reset Game
+	 * @param sizeX
+	 * @param sizeY
+	 */
 	public void reset(int sizeX, int sizeY) {
 		window.setSize(sizeX * zoom, sizeY * zoom);
 		particls.clear();
@@ -69,10 +88,17 @@ public class Gameofthelife implements PaintingInterface {
 		this.window.display(true);
 	}
 	
+	/**
+	 * replace particls collection to p
+	 * @param p
+	 */
 	public void setParticls(Collection<Particl> p) {
 		this.particls.addAll(p);
 	}
 	
+	/**
+	 * clear particls collection
+	 */
 	public void resetParticls() {
 		this.particls.clear();
 	}
@@ -90,7 +116,11 @@ public class Gameofthelife implements PaintingInterface {
 		}
 	}
 	
-	public void updateGame(Collection<Particl> p) {
+	/**
+	 * Update current generation of particls and display
+	 * @param p
+	 */
+	public void updateGeneration(Collection<Particl> p) {
 		resetParticls();
 		//replace all particls
 		setParticls(p);
@@ -102,6 +132,10 @@ public class Gameofthelife implements PaintingInterface {
 		generationN++;
 	}
 	
+	/**
+	 * add one particl
+	 * @param p
+	 */
 	public void addOneParticl(Particl p) {
 		this.particls.add(p);
 		this.window.setparticlsCount(this.particls.size());
@@ -109,6 +143,9 @@ public class Gameofthelife implements PaintingInterface {
 		this.window.display(true);
 	}
 	
+	/**
+	 * set on pause
+	 */
 	public void setPause() {
 		if (onPause == false) {
 			onPause = true;
@@ -118,6 +155,9 @@ public class Gameofthelife implements PaintingInterface {
 		Main.sockClient.sendMessage(new PauseMessage(onPause));
 	}
 	
+	/**
+	 * Close this window and clear all particls
+	 */
 	public void close() {
 		this.window.close();
 		this.window = null;

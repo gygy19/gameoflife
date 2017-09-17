@@ -1,29 +1,38 @@
 package org.gameofthelife.graphics.objects;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.geom.Line2D;
 
 import javax.swing.JPanel;
 
-import org.gameofthelife.client.Gameofthelife;
 import org.gameofthelife.client.Main;
 import org.gameofthelife.client.network.messages.AddOneParticlMessage;
 import org.gameofthelife.graphics.objects.interfaces.PaintingInterface;
 
 public class Graphics extends JPanel implements MouseListener, KeyListener {
 	
-	private int sizeX;
-	private int sizeY;
-	private Window win;
-	private int zoom;
-	private PaintingInterface paintClass;
-	private MenuBar menu;
+	/**
+	 * VERSION
+	 */
+	private static final long serialVersionUID = 1L;
 	
+	private int					sizeX;
+	private int					sizeY;
+	private Window				win;
+	private int					zoom;
+	private PaintingInterface	paintClass;
+	private MenuBar				menu;
+	
+	/**
+	 * Graphics Constructor
+	 * @param sizeX
+	 * @param sizeY
+	 * @param zoom
+	 * @param paintClass
+	 */
 	public Graphics(int sizeX, int sizeY, int zoom, PaintingInterface paintClass) {
 		super();
 		this.sizeX = sizeX;
@@ -38,26 +47,41 @@ public class Graphics extends JPanel implements MouseListener, KeyListener {
 		this.win.addKeyListener(this);
 	}
 	
+	/**
+	 * get sizeX
+	 * @return integer
+	 */
 	public int getsizeX() {
 		return (this.sizeX);
 	}
 	
+	/**
+	 * get sizeY
+	 * @return
+	 */
 	public int getsizeY() {
 		return (this.sizeY);
 	}
 	
-	public void refresh() {
-		this.win.repaint();
-	}
-	
+	/**
+	 * get current zoom of particls
+	 * @return
+	 */
 	public int getZoom() {
 		return (this.zoom);
 	}
 	
+	/**
+	 * change visiblity of the window
+	 * @param visible
+	 */
 	public void display(boolean visible) {
 		this.setVisible(visible);
 	}
 	
+	/**
+	 * child method painting
+	 */
 	protected void paintComponent(java.awt.Graphics g)
 	{
 		super.paintComponent(g);
@@ -66,33 +90,25 @@ public class Graphics extends JPanel implements MouseListener, KeyListener {
 		paintClass.paintLoop(g2);
 	}
 	
-	private void loadGrid(Graphics2D g2) {
-		g2.setColor(Color.BLACK);
-		boolean black = false;
-		for (int y = 0; y < this.sizeY; y++) {
-			for (int x = 0; x < this.sizeX; x++) {
-				if (black) {
-					g2.setColor(Color.BLACK);
-					black = false;
-				}
-				else {
-					g2.setColor(Color.WHITE);
-					black = true;
-				}
-		        Line2D lin = new Line2D.Float(x, y, x, y);
-		        g2.draw(lin);
-	        }
-		}
-	}
-	
+	/**
+	 * change generation output
+	 * @param gcount
+	 */
 	public void setgenerationCount(int gcount) {
 		menu.setgenerationCount(gcount);
 	}
 	
+	/**
+	 * change particlsCount output
+	 * @param count
+	 */
 	public void setparticlsCount(int count) {
 		menu.setparticlsCount(count);
 	}
 	
+	/**
+	 * close this and the window
+	 */
 	public void close() {
 		this.display(false);
 		this.win.setVisible(false);
@@ -105,7 +121,6 @@ public class Graphics extends JPanel implements MouseListener, KeyListener {
 			int y = (e.getY() / Main.game.getZoom());
 			
 			Particl p = new Particl(x, y);
-			//System.out.println("x:" + x + " y:" + y);
 			Main.sockClient.sendMessage(new AddOneParticlMessage(p));
 		}
 	}
@@ -138,6 +153,7 @@ public class Graphics extends JPanel implements MouseListener, KeyListener {
 
 	@Override
 	public void keyPressed(KeyEvent e) {
+		//hook key space
 		if (e.getKeyCode() == KeyEvent.VK_SPACE) {
 			Main.game.setPause();
 		}

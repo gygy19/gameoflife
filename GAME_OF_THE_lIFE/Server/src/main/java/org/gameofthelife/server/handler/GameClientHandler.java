@@ -6,8 +6,8 @@ import org.gameofthelife.server.network.handler.reflexion.MessageHandlerControll
 import org.gameofthelife.server.network.messages.AddOneParticlMessage;
 import org.gameofthelife.server.network.messages.PauseMessage;
 
-@ClassHandlerController("GameServerHandler")
-public class GameServerHandler {
+@ClassHandlerController("GameClientHandler")
+public class GameClientHandler {
 	
 	@MessageHandlerController(PauseMessage.MESSAGE_ID)
 	public static boolean handlePauseMessage(TcpClient client, PauseMessage message) {

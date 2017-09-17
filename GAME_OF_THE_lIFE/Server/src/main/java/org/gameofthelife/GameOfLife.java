@@ -13,20 +13,28 @@ import org.gameofthelife.server.network.messages.ParticlPositionMessage;
 import org.gameofthelife.server.network.messages.PauseMessage;
 import org.gameofthelife.server.network.messages.SetSettingsMessage;
 
-public class Game implements Runnable{
+public class GameOfLife implements Runnable{
 	
-	private static final int DEFAULT_MIN_MAP_X = 0;
-	private static final int DEFAULT_MIN_MAP_Y = 0;
-	private static final int DEFAULT_MAP_X = 1000;
-	private static final int DEFAULT_MAP_Y = 1000;
-	private static final int DEFAULT_REFRESH_TIME = 1000;
-	private static final int DEFAULT_INTERVAL_PARTICL_LIFE = 3;
-	private static final int DEFAULT_MIN_PARTICL_POPULATION = 2;
+	/**
+	 * statics final default informations
+	 */
+	private static final int 		DEFAULT_MIN_MAP_X = 0;
+	private static final int 		DEFAULT_MIN_MAP_Y = 0;
+	private static final int 		DEFAULT_MAP_X = 1000;
+	private static final int 		DEFAULT_MAP_Y = 1000;
+	private static final int 		DEFAULT_REFRESH_TIME = 1000;
+	private static final int 		DEFAULT_INTERVAL_PARTICL_LIFE = 3;
+	private static final int		DEFAULT_MIN_PARTICL_POPULATION = 2;
+	private static final boolean	RANDOM_MODE = true; 
 	
-	private static final boolean RANDOM_MODE = true; 
+	/**
+	 * TODO: je ne pense pas le faire.
+	 */
+	private static GameOfLife 			partagedMap = null;
 	
-	private static Game 		partagedMap = null;
-	
+	/**
+	 * class vars
+	 */
 	private Thread					_t;
 	private SetSettingsMessage		settings;
 	private ArrayList<TcpClient> 	clients = new ArrayList<TcpClient>();
@@ -35,32 +43,57 @@ public class Game implements Runnable{
 	private boolean					onPause = false;
 	
 
-	public Game(SetSettingsMessage settings) {
+	/**
+	 * Game constructor with settings
+	 * @param settings
+	 */
+	public GameOfLife(SetSettingsMessage settings) {
 		this.settings = settings;
 		initialize();
 	}
 	
-	public Game() {
+	/**
+	 * Game contructor with default settings
+	 */
+	public GameOfLife() {
 		this.settings = new SetSettingsMessage(DEFAULT_MAP_X, DEFAULT_MAP_Y, DEFAULT_REFRESH_TIME, DEFAULT_INTERVAL_PARTICL_LIFE);
-		Game.partagedMap = this;
+		GameOfLife.partagedMap = this;
 		initialize();
 	}
 	
-	public static Game getpartagedMap() {
-		return (Game.partagedMap);
+	/**
+	 * singleton of partaged map
+	 * @return
+	 */
+	public static GameOfLife getpartagedMap() {
+		return (GameOfLife.partagedMap);
 	}
 	
+	/**
+	 * initilizer create thread and start
+	 */
 	private void initialize() {
 		this._t = new Thread(this);
 		this._t.start();
 	}
 	
+	/**
+	 * method for add new client to the game
+	 * send new Map message to new client
+	 * @param client
+	 * @throws IOException
+	 */
 	public void addTcpClient(TcpClient client) throws IOException {
 		clients.add(client);
 		client.setGame(this);
 		client.sendMessage(new NewMapMessage(this.settings.sizeMapX, this.settings.sizeMapY));
 	}
 	
+	/**
+	 * remove client
+	 * if clients collection size equals zero finish this loop generation
+	 * @param client
+	 */
 	public void removeTcpClient(TcpClient client) {
 		if (this.clients.contains(client)) {
 			this.clients.remove(client);
@@ -71,25 +104,38 @@ public class Game implements Runnable{
 		client.setGame(null);
 	}
 
-	@Override
 	public void run() {
 		this.map = getcleanMap();
 		load_gameMap();
+		loopGeneration();
+	}
+	
+	/**
+	 * loop generation, wait client time defined after
+	 */
+	private void loopGeneration() {
 		while (finished == false) {
 			if (onPause == false) {
 				sendMapInformations();
-				update_game();
+				update_next_generation();
 			}
 			try { Thread.sleep(this.settings.refreshTime); } catch (InterruptedException e) {}
 		}
 	}
 	
+	/**
+	 * load game map
+	 */
 	private void load_gameMap() {
 		if (RANDOM_MODE) {
 			load_random_map();
 		}
 	}
 	
+	/**
+	 * create new array[][] and set all values to DIED (0)
+	 * @return
+	 */
 	private int[][] getcleanMap() {
 		int[][] newMap = new int[this.settings.sizeMapY + 1][this.settings.sizeMapX + 1];
 		
@@ -101,6 +147,9 @@ public class Game implements Runnable{
 		return (newMap);
 	}
 	
+	/**
+	 * load random map
+	 */
 	private void load_random_map() {
 		int numberOfParticl = (this.settings.sizeMapX * this.settings.sizeMapY) / 5;
 		
@@ -117,7 +166,10 @@ public class Game implements Runnable{
 		}
 	}
 	
-	public void update_game() {
+	/**
+	 * update after generation to new generation
+	 */
+	public void update_next_generation() {
 		int[][] newMap = getcleanMap();
 		
 		for (int y = DEFAULT_MIN_MAP_Y; y < this.settings.sizeMapY; y++) {
@@ -143,6 +195,10 @@ public class Game implements Runnable{
 		this.map = newMap;
 	}
 	
+	/**
+	 * return map array[][] to collection<Partil>
+	 * @return
+	 */
 	public Collection<Particl> getParticls() {
 		ArrayList<Particl> particls = new ArrayList<Particl>();
 		
@@ -155,10 +211,20 @@ public class Game implements Runnable{
 		return (particls);
 	}
 	
+	/**
+	 * return array[][] map
+	 * @return
+	 */
 	public int[][] getMap() {
 		return (this.map);
 	}
 	
+	/**
+	 * check if 2dvector is outofMap 
+	 * @param x
+	 * @param y
+	 * @return
+	 */
 	public boolean isOutofMap(int x, int y) {
 		if (y < 0 || y > this.settings.sizeMapY)
 			return true;
@@ -167,6 +233,9 @@ public class Game implements Runnable{
 		return false;
 	}
 	
+	/**
+	 * send informations of generation to clients
+	 */
 	public void sendMapInformations() {
 		
 		for (TcpClient client : this.clients) {
@@ -177,6 +246,12 @@ public class Game implements Runnable{
 		}
 	}
 	
+	/**
+	 * add one particl to map :
+	 * check if is outofmap and if map contains
+	 * if ok send to client new particl
+	 * @param p
+	 */
 	public void addOneParticl(Particl p) {
 		if (this.isOutofMap(p.x(), p.y()))
 			return ;
@@ -191,10 +266,20 @@ public class Game implements Runnable{
 		}
 	}
 	
+	/**
+	 * set loop on pause
+	 * @param pause
+	 */
 	public void setPause(PauseMessage pause) {
 		this.onPause = pause.onPause;
 	}
 	
+	/**
+	 * STATIC ramdom integer between i1 and i2
+	 * @param i1
+	 * @param i2
+	 * @return
+	 */
 	public static int getRandomValue(int i1, int i2)
 	{
 		if (i2 < i1)
@@ -203,6 +288,10 @@ public class Game implements Runnable{
 		return (rand.nextInt((i2 - i1) + 1)) + i1;
 	}
 	
+	/**
+	 * STATIC return random boolean
+	 * @return
+	 */
 	public static boolean getRandomBool()
 	{
 		return (getRandomValue(1, 2) == 1);

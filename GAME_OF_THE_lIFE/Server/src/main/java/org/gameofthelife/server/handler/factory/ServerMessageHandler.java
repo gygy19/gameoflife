@@ -51,7 +51,7 @@ public class ServerMessageHandler {
 	        	Method m = messagesHandler.get(message.getTypeId());
 	        	
 	        	m.setAccessible(true);
-	        	boolean result = (boolean)m.invoke(Boolean.class, client, message);
+	        	boolean result = (Boolean) m.invoke(Boolean.class, client, message);
 	        	return (result);
 	        }
     	} catch (Exception e)

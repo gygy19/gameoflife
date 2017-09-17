@@ -1,6 +1,6 @@
 package org.gameofthelife.client.handler;
 
-import org.gameofthelife.client.Gameofthelife;
+import org.gameofthelife.client.GameOfLife;
 import org.gameofthelife.client.Main;
 import org.gameofthelife.client.network.handler.reflexion.ClassHandlerController;
 import org.gameofthelife.client.network.handler.reflexion.MessageHandlerController;
@@ -11,6 +11,11 @@ import org.gameofthelife.client.network.messages.ParticlPositionMessage;
 @ClassHandlerController("GameServerHandler")
 public class GameServerHandler {
 
+	/**
+	 * handle newmapmessage
+	 * @param message NewMapMessage
+	 * @return
+	 */
 	@MessageHandlerController(NewMapMessage.MESSAGE_ID)
 	public static boolean handleNewMapMessage(NewMapMessage message) {
 		
@@ -19,21 +24,31 @@ public class GameServerHandler {
 			return true;
 		}
 		
-		Main.game = new Gameofthelife(message.sizeX, message.sizeY);
+		Main.game = new GameOfLife(message.sizeX, message.sizeY);
 		return true;
 	}
 	
+	/**
+	 * handle ParticlPositionMessage
+	 * @param message ParticlPositionMessage
+	 * @return
+	 */
 	@MessageHandlerController(ParticlPositionMessage.MESSAGE_ID)
 	public static boolean handleParticlPositionMessage(ParticlPositionMessage message) {
 		
 		if (Main.game == null)
 			return true;
 		
-		Main.game.updateGame(message.particls);
+		Main.game.updateGeneration(message.particls);
 		
 		return true;
 	}
 	
+	/**
+	 * handle AddOneParticlMessage
+	 * @param message AddOneParticlMessage
+	 * @return
+	 */
 	@MessageHandlerController(AddOneParticlMessage.MESSAGE_ID)
 	public static boolean handleAddOneParticlMessage(AddOneParticlMessage message) {
 		

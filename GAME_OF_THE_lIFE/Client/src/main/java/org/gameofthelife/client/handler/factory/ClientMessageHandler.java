@@ -11,10 +11,17 @@ import org.gameofthelife.client.network.handler.reflexion.ClassHandlerController
 import org.gameofthelife.client.network.handler.reflexion.MessageHandlerController;
 import org.reflections.Reflections;
 
+/**
+ * @author jguyet
+ * Handle Server Message
+ */
 public class ClientMessageHandler {
 
 	public static Map<Integer, Method> messagesHandler = new HashMap<Integer, Method>();
 
+	/**
+	 * load all method on directory org.gameofthelife.client.handler with MessageHandlerController anotation
+	 */
 	static//un seul chargement
 	{
 		Reflections reflections = new Reflections("org.gameofthelife.client.handler");
@@ -41,6 +48,13 @@ public class ClientMessageHandler {
 		}
 	}
 	
+	/**
+	 * check if messagesHandler contains method with annotation value == message.getTypeId()<br>
+	 * return result of execution method
+	 * if method doesn't exist return false
+	 * @param message
+	 * @return
+	 */
     public boolean handleMessage(NetworkMessage message) {
 
     	try
@@ -50,7 +64,7 @@ public class ClientMessageHandler {
 	        	Method m = messagesHandler.get(message.getTypeId());
 	        	
 	        	m.setAccessible(true);
-	        	boolean result = (boolean)m.invoke(Boolean.class, message);
+	        	boolean result = (Boolean)m.invoke(Boolean.class, message);
 	        	return (result);
 	        }
     	} catch (Exception e)

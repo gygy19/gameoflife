@@ -6,6 +6,10 @@ import java.nio.ByteBuffer;
 
 import org.gameofthelife.client.network.messages.DefaultNetworkMessage;
 
+/**
+ * @author jguyet
+ * Protocol message
+ */
 public class NetworkProtocolMessage {
 
 	public static int STATIC_HEADER_LEN = 4;
@@ -16,6 +20,18 @@ public class NetworkProtocolMessage {
 		return (buffer.getInt());
     }
 	
+	/**
+	 * read header message<br>
+	 * 
+	 * 4 first byte equals to messageId<br>
+	 * |0000 0000 0000 0000 0000 0000 0000 0000|<br>
+	 * 4 next byte contain packet len for read esay<br>
+	 * |0000 0000 0000 0000 0000 0000 0000 0000|<br>
+	 * 
+	 * @param socketIn
+	 * @return
+	 * @throws IOException
+	 */
 	public static DefaultNetworkMessage readHeader(InputStream socketIn) throws IOException {
 		
 		byte[] headerbyte = new byte[NetworkProtocolMessage.STATIC_HEADER_LEN];
@@ -57,6 +73,12 @@ public class NetworkProtocolMessage {
 		return (new DefaultNetworkMessage(header, datalen));
 	}
 	
+	/**
+	 * Write 8byte packetId and packetlen
+	 * @param packetId
+	 * @param len
+	 * @return
+	 */
 	public static byte[] writeHeader(int packetId, int len) {
 		ByteBuffer buffer = ByteBuffer.allocate(8);
 		

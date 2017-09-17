@@ -1,17 +1,17 @@
 package org.gameofthelife.graphics.objects;
 
-import java.awt.Color;
 import java.awt.Component;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.geom.Line2D;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+/**
+ * 
+ * @author jguyet
+ * Class window GameOfLife 
+ */
 public class Window extends JFrame{
 	
 	/**
@@ -26,12 +26,13 @@ public class Window extends JFrame{
 	{
 		this.sizeX = sizeX;
 		this.sizeY = sizeY;
+		initialize();
+	}
+	
+	private void initialize() {
 		setOsLook();
         this.setTitle("Game of the life");
-        /*ImageIcon img = new ImageIcon("assets/slafelogo.png");
-        
-        this.setIconImage(img.getImage());*/
-        this.setSize(sizeX, sizeY);
+        this.setSize(this.sizeX, this.sizeY);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setVisible(true);
