@@ -8,7 +8,6 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 import org.gameofthelife.server.network.client.TcpClient;
-import org.gameofthelife.server.network.handler.NetworkMessageHandler;
 
 /**
  * @author jguyet
@@ -52,21 +51,8 @@ public class SocketServer implements Runnable {
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("new client");
                 final TcpClient newClient = new TcpClient(clientSocket);
-                final TcpClientDataHandler dataHandler =  new NetworkMessageHandler();
                 
                 clients.add(newClient);
-                dataHandler.onClientConnected(newClient);
-                new Thread(() -> {
-                    try {
-                        dataHandler.handleTcpData(newClient);
-                    } catch (IOException e)
-                    {
-                    	if (newClient.getGame() != null) {
-                    		newClient.getGame().removeTcpClient(newClient);
-                    	}
-                    	System.out.println("Client Disconnected");
-                    }
-                }).start();
             } catch (IOException e) {
                 throw new UncheckedIOException(e);
             }

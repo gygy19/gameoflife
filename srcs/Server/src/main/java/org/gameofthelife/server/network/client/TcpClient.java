@@ -1,20 +1,26 @@
 package org.gameofthelife.server.network.client;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.net.Socket;
 
 import org.gameofthelife.server.GameOfLife;
 import org.gameofthelife.server.network.NetworkMessage;
+import org.gameofthelife.server.network.TcpClientDataHandler;
+import org.gameofthelife.server.network.handler.NetworkMessageHandler;
 
 /**
  * @author jguyet
  * Class client
  */
-public class TcpClient {
+public class TcpClient implements Runnable {
 
 	private Socket	session;
 	private GameOfLife	game = null;
 	private boolean	online = true;
+	private Thread _t;
+	
+	private TcpClientDataHandler dataHandler =  new NetworkMessageHandler();
 	
 	/**
 	 * Constructor
@@ -22,6 +28,8 @@ public class TcpClient {
 	 */
 	public TcpClient(Socket session) {
 		this.session = session;
+		this._t = new Thread(this);
+		this._t.start();
 	}
 	
 	/**
@@ -77,5 +85,16 @@ public class TcpClient {
 			client.game.removeTcpClient(client);
 		}
 		client.online = false;
+	}
+
+	@Override
+	public void run() {
+		try {
+		dataHandler.onClientConnected(this);
+		dataHandler.handleTcpData(this);
+		} catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+		System.out.println("Client Disconnected");
 	}
 }
