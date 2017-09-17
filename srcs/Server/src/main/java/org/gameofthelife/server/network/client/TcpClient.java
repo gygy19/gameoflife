@@ -86,6 +86,14 @@ public class TcpClient implements Runnable {
 		}
 		client.online = false;
 	}
+	
+	/**
+	 * is online
+	 * @return
+	 */
+	public boolean is_online() {
+		return (this.online);
+	}
 
 	@Override
 	public void run() {

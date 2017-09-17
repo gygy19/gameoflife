@@ -38,8 +38,9 @@ public class NetworkMessageHandler implements TcpClientDataHandler {
 	 */
 	public void handleTcpData(TcpClient client) throws IOException {
 		
-		while (!client.getSession().isClosed())
+		while (!client.getSession().isClosed() && client.is_online())
         {	
+			try {
             readMessage(client.getSession().getInputStream());
             
             if (this._splittedPacket)
@@ -55,6 +56,9 @@ public class NetworkMessageHandler implements TcpClientDataHandler {
             if (!serverMessageHandler.handleMessage(client, message)) {
             	//error
             }
+			} catch (Exception e) {
+				TcpClient.kick(client);
+			}
         }
 	}
 	
