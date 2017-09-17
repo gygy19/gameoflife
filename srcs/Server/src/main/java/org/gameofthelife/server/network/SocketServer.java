@@ -47,7 +47,7 @@ public class SocketServer implements Runnable {
 		while (true)
 		{
 			try {
-            	System.out.println("Wainting connection...");
+            	System.out.println("Waiting connection...");
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("new client");
                 final TcpClient newClient = new TcpClient(clientSocket);
