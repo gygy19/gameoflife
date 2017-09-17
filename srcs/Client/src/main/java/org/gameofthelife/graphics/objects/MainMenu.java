@@ -14,6 +14,10 @@ import javax.swing.JTextField;
 
 import org.gameofthelife.client.Main;
 
+/**
+ * @author jguyet
+ * Menu start
+ */
 public class MainMenu extends JPanel implements ActionListener {
 
 	/**

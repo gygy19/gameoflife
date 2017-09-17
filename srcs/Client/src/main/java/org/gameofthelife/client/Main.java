@@ -11,6 +11,10 @@ import org.gameofthelife.client.network.TcpDataHandler;
 import org.gameofthelife.client.network.handler.NetworkMessageHandler;
 import org.gameofthelife.graphics.objects.MainMenu;
 
+/**
+ * @author jguyet
+ * Main
+ */
 public class Main 
 {
 	/**
@@ -40,8 +44,8 @@ public class Main
 	/**
 	 * Settings
 	 */
-	public static int				mapX = 1500;
-	public static int				mapY = 1500;
+	public static int				mapX = 100;
+	public static int				mapY = 100;
 	public static int				refreshTime = 1000 / 10;
 	public static int				population_max_life = 3;
 	
@@ -225,7 +229,7 @@ public class Main
 		try {
 			InetAddress.getByName(ip);
 		} catch (UnknownHostException e) {
-			System.out.println("Server host ip not resolvable.");
+			System.out.println("Server host ip not avalable.");
 			return false;
 		}
 		int port = 0;

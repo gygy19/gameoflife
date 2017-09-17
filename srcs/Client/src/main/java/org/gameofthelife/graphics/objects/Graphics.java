@@ -9,9 +9,14 @@ import java.awt.event.MouseListener;
 import javax.swing.JPanel;
 
 import org.gameofthelife.client.Main;
+import org.gameofthelife.client.entity.Particl;
 import org.gameofthelife.client.network.messages.AddOneParticlMessage;
 import org.gameofthelife.graphics.objects.interfaces.PaintingInterface;
 
+/**
+ * @author jguyet
+ * Window grid
+ */
 public class Graphics extends JPanel implements MouseListener, KeyListener {
 	
 	/**
@@ -77,6 +82,10 @@ public class Graphics extends JPanel implements MouseListener, KeyListener {
 	 */
 	public void display(boolean visible) {
 		this.setVisible(visible);
+	}
+	
+	public void setSize(int width, int height) {
+		this.win.setSize(width, height);
 	}
 	
 	/**

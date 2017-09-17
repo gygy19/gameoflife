@@ -6,6 +6,10 @@ import org.gameofthelife.client.network.handler.reflexion.MessageHandlerControll
 import org.gameofthelife.client.network.messages.HelloMessage;
 import org.gameofthelife.client.network.messages.SetSettingsMessage;
 
+/**
+ * @author jguyet
+ *
+ */
 @ClassHandlerController("ConnectionServerHandler")
 public class ConnectionServerHandler {
 

@@ -2,7 +2,7 @@ package org.gameofthelife.server.network.messages;
 
 import java.nio.ByteBuffer;
 
-import org.gameofthelife.entity.Particl;
+import org.gameofthelife.server.entity.Particl;
 import org.gameofthelife.server.network.NetworkMessage;
 import org.gameofthelife.server.network.handler.reflexion.MessageHandlerController;
 

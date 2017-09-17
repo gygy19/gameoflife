@@ -1,6 +1,6 @@
-package org.gameofthelife.entity;
+package org.gameofthelife.server.entity;
 
-import org.gameofthelife.GameOfLife;
+import org.gameofthelife.server.GameOfLife;
 
 /**
  * @author jguyet

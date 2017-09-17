@@ -1,5 +1,9 @@
 package org.gameofthelife.server.network;
 
+/**
+ * @author jguyet
+ * abstract newtorkMessage
+ */
 public abstract class NetworkMessage implements NetworkType{
 	
 	protected byte[] 	data = new byte[0];
@@ -9,6 +13,10 @@ public abstract class NetworkMessage implements NetworkType{
 		
 	}
 	
+	/**
+	 * Serialize header
+	 * @return
+	 */
 	public byte[] serializeHeader() {
 		int packetlen = this.data.length;
 		byte[] header = NetworkProtocolMessage.writeHeader(this.getTypeId(), packetlen);
@@ -20,10 +28,18 @@ public abstract class NetworkMessage implements NetworkType{
 		return packet;
 	}
 	
+	/**
+	 * get Data byte Array
+	 * @return
+	 */
 	public byte[] getData() {
 		return (this.data);
 	}
 	
+	/**
+	 * set Data byte array
+	 * @param data
+	 */
 	public void setData(byte[] data) {
 		this.data = data;
 	}

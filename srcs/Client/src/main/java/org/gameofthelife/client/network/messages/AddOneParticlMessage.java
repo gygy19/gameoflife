@@ -2,9 +2,9 @@ package org.gameofthelife.client.network.messages;
 
 import java.nio.ByteBuffer;
 
+import org.gameofthelife.client.entity.Particl;
 import org.gameofthelife.client.network.NetworkMessage;
 import org.gameofthelife.client.network.handler.reflexion.MessageHandlerController;
-import org.gameofthelife.graphics.objects.Particl;
 
 @MessageHandlerController(6)
 public class AddOneParticlMessage extends NetworkMessage{

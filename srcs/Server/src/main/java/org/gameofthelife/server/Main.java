@@ -6,6 +6,10 @@ import java.net.UnknownHostException;
 
 import org.gameofthelife.server.network.SocketServer;
 
+/**
+ * @author jguyet
+ * Main class
+ */
 public class Main 
 {
 	public static SocketServer server;
@@ -20,6 +24,11 @@ public class Main
     	start();
     }
     
+    /**
+     * load flags on args
+     * @param args
+     * @return
+     */
     public static boolean load_args(String[] args) {
     	
     	if (args.length == 0)
@@ -48,21 +57,31 @@ public class Main
     	return true;
     }
     
+    /**
+     * Start server connection
+     */
     public static void start() {
     	Main.server = new SocketServer();
     	
     	try {
 			Main.server.start(host, port);
 		} catch (IOException e) {
-			System.out.println("Address \"" + host + "\" is not valable.");
+			System.out.println("Address \"" + host + "\" is not avalable.");
 		}
     }
     
+    /**
+     * Default error args output
+     * @return
+     */
     public static boolean print_error_args(){
-    	System.out.println("java -jar server.jar hostip:port OR hostip port");
+    	System.out.println("java -jar server.jar --help");
     	return false;
     }
     
+    /**
+     * help output
+     */
     public static void print_help() {
     	System.out.println("--------------------------------------------");
     	System.out.println("Server GameOfLife by jguyet v1.0");
@@ -73,6 +92,12 @@ public class Main
     	System.out.println("--------------------------------------------");
     }
     
+    /**
+     * Load host and port
+     * @param ip
+     * @param sport
+     * @return
+     */
     public static boolean load_information(String ip, String sport) {
     		
     		try {

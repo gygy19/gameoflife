@@ -1,4 +1,4 @@
-package org.gameofthelife.client.network.handler;
+package org.gameofthelife.server.network.handler.factory;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
@@ -6,18 +6,25 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.gameofthelife.client.network.NetworkMessage;
-import org.gameofthelife.client.network.handler.reflexion.MessageHandlerController;
-import org.gameofthelife.client.network.messages.DefaultNetworkMessage;
+import org.gameofthelife.server.network.NetworkMessage;
+import org.gameofthelife.server.network.handler.reflexion.MessageHandlerController;
+import org.gameofthelife.server.network.messages.DefaultNetworkMessage;
 import org.reflections.Reflections;
 
+/**
+ * @author jguyet
+ *
+ */
 public class MessageFactoryImplementation {
 
 	public static Map<Integer, Class<?>> messages = new HashMap<Integer, Class<?>>();
 
+	/**
+	 * load all class child of NetworkMessage on org.gameofthelife.server.network.messages with MessageHandlerController anotation
+	 */
 	static//un seul chargement
 	{
-		Reflections reflections = new Reflections("org.gameofthelife.client.network.messages");
+		Reflections reflections = new Reflections("org.gameofthelife.server.network.messages");
 
 		Set<Class<? extends NetworkMessage>> allClasses = reflections.getSubTypesOf(NetworkMessage.class);
 		
@@ -36,6 +43,13 @@ public class MessageFactoryImplementation {
 		}
 	}
 	
+	/**
+	 * check if messages contains method with annotation value == message.getTypeId()<br>
+	 * return result newInstance
+	 * if Message doesn't exist return null
+	 * @param message
+	 * @return
+	 */
 	public NetworkMessage createMessage(DefaultNetworkMessage message) {
 
     	NetworkMessage result = null;

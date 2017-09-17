@@ -2,15 +2,24 @@ package org.gameofthelife.server.handler;
 
 import java.io.IOException;
 
-import org.gameofthelife.GameOfLife;
+import org.gameofthelife.server.GameOfLife;
 import org.gameofthelife.server.network.client.TcpClient;
 import org.gameofthelife.server.network.handler.reflexion.ClassHandlerController;
 import org.gameofthelife.server.network.handler.reflexion.MessageHandlerController;
 import org.gameofthelife.server.network.messages.SetSettingsMessage;
 
+/**
+ * @author jguyet
+ *
+ */
 @ClassHandlerController("ConnectionClientHandler")
 public class ConnectionClientHandler {
-
+	/**
+	 * Handle SetSettingsMessage
+	 * @param client
+	 * @param message
+	 * @return
+	 */
 	@MessageHandlerController(SetSettingsMessage.MESSAGE_ID)
 	public static boolean handleSettingsMessage(TcpClient client, SetSettingsMessage message) {
 		

@@ -4,9 +4,9 @@ import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.gameofthelife.client.entity.Particl;
 import org.gameofthelife.client.network.messages.PauseMessage;
 import org.gameofthelife.graphics.objects.Graphics;
-import org.gameofthelife.graphics.objects.Particl;
 import org.gameofthelife.graphics.objects.interfaces.PaintingInterface;
 
 /**
@@ -37,6 +37,7 @@ public class GameOfLife implements PaintingInterface {
 	 * TODO: a refaire
 	 */
 	private void intitialize_zoom() {
+		zoom = 1;
 		if (sizeX < 1000 && sizeY < 1000) {
 			zoom = 2;
 		}
@@ -82,6 +83,9 @@ public class GameOfLife implements PaintingInterface {
 	 * @param sizeY
 	 */
 	public void reset(int sizeX, int sizeY) {
+		this.sizeX = sizeX;
+		this.sizeY = sizeY;
+		intitialize_zoom();
 		window.setSize(sizeX * zoom, sizeY * zoom);
 		particls.clear();
 		this.generationN = 0;

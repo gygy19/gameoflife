@@ -50,7 +50,7 @@ public class ClientMessageHandler {
 	
 	/**
 	 * check if messagesHandler contains method with annotation value == message.getTypeId()<br>
-	 * return result of execution method
+	 * return result on execution method
 	 * if method doesn't exist return false
 	 * @param message
 	 * @return

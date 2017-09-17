@@ -4,7 +4,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.gameofthelife.entity.Particl;
+import org.gameofthelife.server.entity.Particl;
 import org.gameofthelife.server.network.NetworkMessage;
 import org.gameofthelife.server.network.handler.reflexion.MessageHandlerController;
 

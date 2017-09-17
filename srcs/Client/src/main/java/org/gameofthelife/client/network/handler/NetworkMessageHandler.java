@@ -9,8 +9,13 @@ import org.gameofthelife.client.handler.factory.ClientMessageHandler;
 import org.gameofthelife.client.network.NetworkMessage;
 import org.gameofthelife.client.network.NetworkProtocolMessage;
 import org.gameofthelife.client.network.TcpDataHandler;
+import org.gameofthelife.client.network.handler.factory.MessageFactoryImplementation;
 import org.gameofthelife.client.network.messages.DefaultNetworkMessage;
 
+/**
+ * @author jguyet
+ *
+ */
 public class NetworkMessageHandler implements TcpDataHandler {
 
 	private MessageFactoryImplementation messageFactory = new MessageFactoryImplementation();

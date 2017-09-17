@@ -4,9 +4,9 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.gameofthelife.client.entity.Particl;
 import org.gameofthelife.client.network.NetworkMessage;
 import org.gameofthelife.client.network.handler.reflexion.MessageHandlerController;
-import org.gameofthelife.graphics.objects.Particl;
 
 @MessageHandlerController(5)
 public class ParticlPositionMessage extends NetworkMessage {

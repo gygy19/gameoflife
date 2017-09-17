@@ -1,4 +1,4 @@
-package org.gameofthelife.graphics.objects;
+package org.gameofthelife.client.entity;
 
 import java.awt.Color;
 import java.awt.Graphics2D;

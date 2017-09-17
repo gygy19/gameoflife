@@ -43,13 +43,9 @@ public static final int MESSAGE_ID = 2;
 		ByteBuffer buffer = ByteBuffer.wrap(this.data);
 		
 		this.sizeMapX = buffer.getInt();
-		System.out.println("sizeMapX: " + sizeMapX);
 		this.sizeMapY = buffer.getInt();
-		System.out.println("sizeMapY: " + sizeMapY);
 		this.refreshTime = buffer.getInt();
-		System.out.println("refreshTime: " + refreshTime);
 		this.interval_life = buffer.getInt();
-		System.out.println("interval_life: " + interval_life);
 	}
 
 	@Override

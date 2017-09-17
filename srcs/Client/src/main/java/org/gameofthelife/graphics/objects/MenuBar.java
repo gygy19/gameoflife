@@ -9,8 +9,13 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
 import org.gameofthelife.client.Main;
+import org.gameofthelife.client.network.messages.JoinCommunityMapMessage;
 import org.gameofthelife.client.network.messages.SetSettingsMessage;
 
+/**
+ * @author jguyet
+ * Game menu
+ */
 public class MenuBar extends JMenuBar{
 
 	/**
@@ -25,6 +30,7 @@ public class MenuBar extends JMenuBar{
 	JMenu		generationN			= new JMenu("0");
 	JMenu		count				= new JMenu("Particls:");
 	JMenu		particlCount		= new JMenu("0");
+	JMenu		button_community	= new JMenu("join community map");
 	
 	public MenuBar() {
 		super();
@@ -44,28 +50,16 @@ public class MenuBar extends JMenuBar{
 			}
 
 			@Override
-			public void mousePressed(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void mousePressed(MouseEvent e) {}
 
 			@Override
-			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void mouseReleased(MouseEvent e) {}
 
 			@Override
-			public void mouseEntered(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void mouseEntered(MouseEvent e) {}
 
 			@Override
-			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void mouseExited(MouseEvent e) {}
 
 		});
 		this.add(button_resetMap);
@@ -73,6 +67,28 @@ public class MenuBar extends JMenuBar{
 		this.add(generationN);
 		this.add(count);
 		this.add(particlCount);
+		button_community.addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				//send refresh
+				Main.sockClient.sendMessage(new JoinCommunityMapMessage());
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {}
+
+			@Override
+			public void mouseExited(MouseEvent e) {}
+
+		});
+		this.add(button_community);
 	}
 	
 	public void setgenerationCount(int gcount) {

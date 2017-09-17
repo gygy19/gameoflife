@@ -8,6 +8,10 @@ import org.gameofthelife.client.network.messages.AddOneParticlMessage;
 import org.gameofthelife.client.network.messages.NewMapMessage;
 import org.gameofthelife.client.network.messages.ParticlPositionMessage;
 
+/**
+ * @author jguyet
+ *
+ */
 @ClassHandlerController("GameServerHandler")
 public class GameServerHandler {
 

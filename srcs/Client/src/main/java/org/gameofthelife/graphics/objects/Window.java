@@ -8,7 +8,6 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 /**
- * 
  * @author jguyet
  * Class window GameOfLife 
  */

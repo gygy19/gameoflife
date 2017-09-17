@@ -10,6 +10,10 @@ import java.util.ArrayList;
 import org.gameofthelife.server.network.client.TcpClient;
 import org.gameofthelife.server.network.handler.NetworkMessageHandler;
 
+/**
+ * @author jguyet
+ *
+ */
 public class SocketServer implements Runnable {
 
 	private ServerSocket 						serverSocket;

@@ -1,11 +1,11 @@
-package org.gameofthelife;
+package org.gameofthelife.server;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Random;
 
-import org.gameofthelife.entity.Particl;
+import org.gameofthelife.server.entity.Particl;
 import org.gameofthelife.server.network.client.TcpClient;
 import org.gameofthelife.server.network.messages.AddOneParticlMessage;
 import org.gameofthelife.server.network.messages.NewMapMessage;
@@ -13,6 +13,10 @@ import org.gameofthelife.server.network.messages.ParticlPositionMessage;
 import org.gameofthelife.server.network.messages.PauseMessage;
 import org.gameofthelife.server.network.messages.SetSettingsMessage;
 
+/**
+ * @author jguyet
+ * Class of game
+ */
 public class GameOfLife implements Runnable{
 	
 	/**
@@ -20,12 +24,11 @@ public class GameOfLife implements Runnable{
 	 */
 	private static final int 		DEFAULT_MIN_MAP_X = 0;
 	private static final int 		DEFAULT_MIN_MAP_Y = 0;
-	private static final int 		DEFAULT_MAP_X = 1000;
-	private static final int 		DEFAULT_MAP_Y = 1000;
-	private static final int 		DEFAULT_REFRESH_TIME = 1000;
+	private static final int 		DEFAULT_MAP_X = 150;
+	private static final int 		DEFAULT_MAP_Y = 150;
+	private static final int 		DEFAULT_REFRESH_TIME = 1000/10;
 	private static final int 		DEFAULT_INTERVAL_PARTICL_LIFE = 3;
 	private static final int		DEFAULT_MIN_PARTICL_POPULATION = 2;
-	private static final boolean	RANDOM_MODE = true; 
 	
 	/**
 	 * TODO: je ne pense pas le faire.
@@ -41,7 +44,7 @@ public class GameOfLife implements Runnable{
 	private boolean					finished = false;
 	private int[][]					map;
 	private boolean					onPause = false;
-	
+	private int						MODE = 1;
 
 	/**
 	 * Game constructor with settings
@@ -58,6 +61,7 @@ public class GameOfLife implements Runnable{
 	public GameOfLife() {
 		this.settings = new SetSettingsMessage(DEFAULT_MAP_X, DEFAULT_MAP_Y, DEFAULT_REFRESH_TIME, DEFAULT_INTERVAL_PARTICL_LIFE);
 		GameOfLife.partagedMap = this;
+		this.MODE = 0;
 		initialize();
 	}
 	
@@ -98,7 +102,7 @@ public class GameOfLife implements Runnable{
 		if (this.clients.contains(client)) {
 			this.clients.remove(client);
 		}
-		if (this.clients.size() == 0) {
+		if (this.clients.size() == 0 && this != GameOfLife.getpartagedMap()) {
 			this.finished = true;
 		}
 		client.setGame(null);
@@ -127,8 +131,13 @@ public class GameOfLife implements Runnable{
 	 * load game map
 	 */
 	private void load_gameMap() {
-		if (RANDOM_MODE) {
-			load_random_map();
+		switch (MODE) {
+			case 0:
+				//zero particls
+				break ;
+			case 1:
+				load_random_map();
+				break ;
 		}
 	}
 	
@@ -238,9 +247,11 @@ public class GameOfLife implements Runnable{
 	 */
 	public void sendMapInformations() {
 		
+		Collection<Particl> parts = new ArrayList<Particl>(this.getParticls());
+		
 		for (TcpClient client : this.clients) {
 			
-			ParticlPositionMessage message = new ParticlPositionMessage(this.getParticls());
+			ParticlPositionMessage message = new ParticlPositionMessage(parts);
 			
 			client.sendMessage(message);
 		}
