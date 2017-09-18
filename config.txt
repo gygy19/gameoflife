@@ -2,7 +2,7 @@
 //-flag arg1 arg2 ...
 
 //host ip:port
--host 185.157.247.103:1111
+-host localhost:5555
 
 //max interval life
 -maxIntervalLife 5
