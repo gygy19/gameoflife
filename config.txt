@@ -2,11 +2,12 @@
 //-flag arg1 arg2 ...
 
 //host ip:port
--host localhost:5555
+-host 185.157.247.103:1111
 
-//max number of particls life
+//max interval life
 -maxIntervalLife 5
 
+//min interval life
 -minIntervalLife 1
 
 // time in milliseconde for loop generation
