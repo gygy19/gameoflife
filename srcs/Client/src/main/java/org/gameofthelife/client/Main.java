@@ -23,7 +23,7 @@ public class Main
 	public static final int			MIN_MAP_SIZE = 10;
 	public static final int			MAX_REFRESH_TIME = 1000 / 60;
 	public static final int			MAX_POPULATION = 8;
-	public static final int			MIN_ALIVE_POPULATION = 2;
+	public static final int			MIN_ALIVE_POPULATION = 0;
 	public static final String		CONFIG_NAME = "config.txt";
 	
 	/**
@@ -47,7 +47,9 @@ public class Main
 	public static int				mapX = 100;
 	public static int				mapY = 100;
 	public static int				refreshTime = 1000 / 10;
-	public static int				population_max_life = 3;
+	public static int				min_interval_life = 2;
+	public static int				max_interval_life = 3;
+	public static int				number_of_random_particls = -1;
 	
     public static void main(String[] args)
     {
@@ -170,7 +172,7 @@ public class Main
     				i += 1;
     				Main.refreshTime = ms;
     				break ;
-    			case "-maxAlivePopulation":
+    			case "-maxIntervalLife":
     				if (i + 1 > args.length){
     					System.out.println("Syntaxe error -refresh ms");
     					return false;
@@ -180,21 +182,67 @@ public class Main
     				try {
     					maxalive = Integer.parseInt(args[i + 1]);
     				} catch (Exception e) {
-    					System.out.println("Syntaxe error -refresh ms (ms is a number)");
+    					System.out.println("Syntaxe error -maxIntervalLife n (n is a number)");
     					return false;
     				}
     				
     				if (maxalive < MIN_ALIVE_POPULATION) {
-    					System.out.println("Minimum maxAlivePopulation is " + MIN_ALIVE_POPULATION);
+    					System.out.println("Minimum interval life is " + MIN_ALIVE_POPULATION);
     					return false;
     				}
     				
     				if (maxalive > MAX_POPULATION) {
-    					System.out.println("Maximum maxAlivePopulation is " + MAX_POPULATION);
+    					System.out.println("Maximum interval life is " + MAX_POPULATION);
     					return false;
     				}
     				i += 1;
-    				Main.population_max_life = maxalive;
+    				Main.max_interval_life = maxalive;
+    				break ;
+    			case "-minIntervalLife":
+    				if (i + 1 > args.length){
+    					System.out.println("Syntaxe error -refresh ms");
+    					return false;
+    				}
+    				int minalive = -1;
+    				
+    				try {
+    					minalive = Integer.parseInt(args[i + 1]);
+    				} catch (Exception e) {
+    					System.out.println("Syntaxe error -minIntervalLife n (n is a number)");
+    					return false;
+    				}
+    				
+    				if (minalive < MIN_ALIVE_POPULATION) {
+    					System.out.println("Minimum interval life is " + MIN_ALIVE_POPULATION);
+    					return false;
+    				}
+    				
+    				if (minalive > MAX_POPULATION) {
+    					System.out.println("Maximum interval life is " + MAX_POPULATION);
+    					return false;
+    				}
+    				i += 1;
+    				Main.min_interval_life = minalive;
+    				break ;
+    			case "-particls":
+    				if (i + 1 > args.length){
+    					System.out.println("Syntaxe error -refresh ms");
+    					return false;
+    				}
+    				int particls = -1;
+    				
+    				try {
+    					particls = Integer.parseInt(args[i + 1]);
+    				} catch (Exception e) {
+    					System.out.println("Syntaxe error -particls n (n is a number)");
+    					return false;
+    				}
+    				
+    				if (particls < 0) {
+    					particls = -1;
+    				}
+    				i += 1;
+    				Main.number_of_random_particls = particls;
     				break ;
     			case "-host":
     				if (i + 1 > args.length){
@@ -262,8 +310,10 @@ public class Main
     	System.out.println("Commands                :");
     	System.out.println("--help                  : informations");
     	System.out.println("-size                   : -size sizeX sizeY (min size 10x10), (max size 1500x1500)");
-    	System.out.println("-maxAlivePopulation     : -maxAlivePopulation 3 (min 2), (max 8)");
-    	System.out.println("-refresh                : -maxAlivePopulation 500 (in millisecondes) (min 60fps(1000/60))");
+    	System.out.println("-maxIntervalLife        : -maxIntervalLife 5 (min 0), (max 8)");
+    	System.out.println("-minIntervalLife        : -minIntervalLife 1 (min 0), (max 8)");
+    	System.out.println("-particls               : -particls -1 (-1 == random)");
+    	System.out.println("-refresh                : -refresh 500 (in millisecondes) (min 60fps(1000/60))");
     	System.out.println("------------------------------------------------------------------------------------------------");
     }
     

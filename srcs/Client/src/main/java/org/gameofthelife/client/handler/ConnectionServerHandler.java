@@ -21,7 +21,7 @@ public class ConnectionServerHandler {
 	@MessageHandlerController(HelloMessage.MESSAGE_ID)
 	public static boolean handleSettingsMessage(HelloMessage message) {
 		//send settings
-		Main.sockClient.sendMessage(new SetSettingsMessage(Main.mapX, Main.mapY, Main.refreshTime, Main.population_max_life));
+		Main.sockClient.sendMessage(new SetSettingsMessage(Main.mapX, Main.mapY, Main.refreshTime, Main.min_interval_life, Main.max_interval_life, Main.number_of_random_particls));
 		return true;
 	}
 }

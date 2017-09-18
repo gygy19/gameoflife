@@ -1,5 +1,6 @@
 package org.gameofthelife.graphics.objects;
 
+import java.awt.BorderLayout;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -50,6 +51,20 @@ public class Graphics extends JPanel implements MouseListener, KeyListener {
 		this.win.setJMenuBar(this.menu);
 		this.addMouseListener(this);
 		this.win.addKeyListener(this);
+		BorderLayout b = new BorderLayout();
+		this.setLayout(b);
+		
+		/*this.alive_menu = new AliveMenu();
+		this.died_menu = new DiedMenu();
+		this.win.setLocationRelativeTo(null);
+		JPanel statusPanel = new JPanel();
+		this.win.add(statusPanel, BorderLayout.SOUTH);
+		statusPanel.setBorder(new BevelBorder(BevelBorder.RAISED));
+		statusPanel.setPreferredSize(new Dimension(this.win.getWidth(), 60));
+		statusPanel.setLayout(new BorderLayout());
+		
+		statusPanel.add(this.alive_menu, BorderLayout.SOUTH);
+		statusPanel.add(this.died_menu, BorderLayout.NORTH);*/
 	}
 	
 	/**
@@ -74,6 +89,18 @@ public class Graphics extends JPanel implements MouseListener, KeyListener {
 	 */
 	public int getZoom() {
 		return (this.zoom);
+	}
+	
+	/**
+	 * setter zoom
+	 * @param zoom
+	 */
+	public void setZoom(int zoom) {
+		this.zoom = zoom;
+	}
+	
+	public Window getWindow() {
+		return (this.win);
 	}
 	
 	/**

@@ -27,9 +27,11 @@ public class ConnectionClientHandler {
 			client.getGame().removeTcpClient(client);
 		}
 		
-		if (message.interval_life < 1 || message.interval_life > 5) {
-			//error interval_life
-			message.interval_life = 3;
+		if (message.interval_life < 0 || message.interval_life > 8) {
+			message.interval_life = 5;
+		}
+		if (message.min_interval_life < 0 || message.min_interval_life > 8) {
+			message.interval_life = 1;
 		}
 		GameOfLife gameoflife = new GameOfLife(message);
 		try {

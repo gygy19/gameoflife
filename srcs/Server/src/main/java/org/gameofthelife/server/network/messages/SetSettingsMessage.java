@@ -8,12 +8,14 @@ import org.gameofthelife.server.network.handler.reflexion.MessageHandlerControll
 @MessageHandlerController(2)
 public class SetSettingsMessage extends NetworkMessage {
 
-public static final int MESSAGE_ID = 2;
+	public static final int MESSAGE_ID = 2;
 	
 	public int sizeMapX;
 	public int sizeMapY;
 	public int refreshTime;
 	public int interval_life;
+	public int min_interval_life;
+	public int rand_particls;
 	
 	@Override
 	public int getTypeId() {
@@ -30,12 +32,14 @@ public static final int MESSAGE_ID = 2;
 		this.data = data;
 	}
 	
-	public SetSettingsMessage(int sizeMapX, int sizeMapY, int refreshTime, int interval_life) {
+	public SetSettingsMessage(int sizeMapX, int sizeMapY, int refreshTime, int min_interval_life, int interval_life, int rand_particls) {
 		super();
 		this.sizeMapX = sizeMapX;
 		this.sizeMapY = sizeMapY;
 		this.refreshTime = refreshTime;
+		this.min_interval_life = min_interval_life;
 		this.interval_life = interval_life;
+		this.rand_particls = rand_particls;
 	}
 
 	@Override
@@ -45,18 +49,21 @@ public static final int MESSAGE_ID = 2;
 		this.sizeMapX = buffer.getInt();
 		this.sizeMapY = buffer.getInt();
 		this.refreshTime = buffer.getInt();
+		this.min_interval_life = buffer.getInt();
 		this.interval_life = buffer.getInt();
+		this.rand_particls = buffer.getInt();
 	}
 
 	@Override
 	public void serialize() {
-		ByteBuffer buffer = ByteBuffer.allocate(16);
+		ByteBuffer buffer = ByteBuffer.allocate(28);
 		
 		buffer.putInt(this.sizeMapX);
 		buffer.putInt(this.sizeMapY);
 		buffer.putInt(this.refreshTime);
+		buffer.putInt(this.min_interval_life);
 		buffer.putInt(this.interval_life);
+		buffer.putInt(this.rand_particls);
 		this.data = buffer.array();
 	}
-
 }

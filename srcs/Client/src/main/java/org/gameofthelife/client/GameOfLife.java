@@ -41,23 +41,17 @@ public class GameOfLife implements PaintingInterface {
 		if (sizeX < 1000 && sizeY < 1000) {
 			zoom = 2;
 		}
-		if (sizeX < 800 && sizeY < 800) {
-			zoom = 4;
+		if (sizeX < 401 && sizeY < 401) {
+			zoom = 3;
 		}
-		if (sizeX < 600 && sizeY < 600) {
-			zoom = 6;
-		}
-		if (sizeX < 400 && sizeY < 400) {
-			zoom = 8;
-		}
-		if (sizeX < 200 && sizeY < 200) {
-			zoom = 10;
+		if (sizeX < 201 && sizeY < 201) {
+			zoom = 7;
 		}
 		if (sizeX < 100 && sizeY < 100) {
-			zoom = 20;
+			zoom = 12;
 		}
 		if (sizeX < 50 && sizeY < 50) {
-			zoom = 40;
+			zoom = 30;
 		}
 	}
 	
@@ -66,6 +60,7 @@ public class GameOfLife implements PaintingInterface {
 	 */
 	private void initializeWindow() {
 		window = new Graphics(sizeX * zoom, sizeY * zoom, zoom, this);
+		window.getWindow().setSize(sizeX * zoom, sizeY * zoom);
 		window.display(true);
 	}
 	
@@ -83,10 +78,14 @@ public class GameOfLife implements PaintingInterface {
 	 * @param sizeY
 	 */
 	public void reset(int sizeX, int sizeY) {
-		this.sizeX = sizeX;
-		this.sizeY = sizeY;
-		intitialize_zoom();
-		window.setSize(sizeX * zoom, sizeY * zoom);
+		if (sizeX != this.sizeX || sizeY != this.sizeY) {
+			this.sizeX = sizeX;
+			this.sizeY = sizeY;
+			intitialize_zoom();
+			this.window.setZoom(zoom);
+			this.window.getWindow().setSize(sizeX * zoom, sizeY * zoom);
+			this.window.setSize(sizeX * zoom, sizeY * zoom);
+		}
 		particls.clear();
 		this.generationN = 0;
 		this.window.display(true);

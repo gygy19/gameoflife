@@ -27,8 +27,8 @@ public class GameOfLife implements Runnable{
 	private static final int 		DEFAULT_MAP_X = 150;
 	private static final int 		DEFAULT_MAP_Y = 150;
 	private static final int 		DEFAULT_REFRESH_TIME = 1000/10;
-	private static final int 		DEFAULT_INTERVAL_PARTICL_LIFE = 3;
-	private static final int		DEFAULT_MIN_PARTICL_POPULATION = 2;
+	private static final int 		DEFAULT_MIN_INTERVAL_PARTICL_LIFE = 2;
+	private static final int 		DEFAULT_MAX_INTERVAL_PARTICL_LIFE = 3;
 	
 	/**
 	 * TODO: je ne pense pas le faire.
@@ -59,7 +59,7 @@ public class GameOfLife implements Runnable{
 	 * Game contructor with default settings
 	 */
 	public GameOfLife() {
-		this.settings = new SetSettingsMessage(DEFAULT_MAP_X, DEFAULT_MAP_Y, DEFAULT_REFRESH_TIME, DEFAULT_INTERVAL_PARTICL_LIFE);
+		this.settings = new SetSettingsMessage(DEFAULT_MAP_X, DEFAULT_MAP_Y, DEFAULT_REFRESH_TIME, DEFAULT_MIN_INTERVAL_PARTICL_LIFE, DEFAULT_MAX_INTERVAL_PARTICL_LIFE, -1);
 		GameOfLife.partagedMap = this;
 		this.MODE = 0;
 		initialize();
@@ -162,6 +162,10 @@ public class GameOfLife implements Runnable{
 	private void load_random_map() {
 		int numberOfParticl = (this.settings.sizeMapX * this.settings.sizeMapY) / 5;
 		
+		if (settings.rand_particls != -1 && settings.rand_particls < numberOfParticl) {
+			numberOfParticl = settings.rand_particls;
+		}
+		
 		for (int i = 0; i < numberOfParticl; i++) {
 		
 			int x = getRandomValue(DEFAULT_MIN_MAP_X, this.settings.sizeMapX - 1);
@@ -193,7 +197,7 @@ public class GameOfLife implements Runnable{
 				
 				oppositeParticls = Particl.checkHasOppositeParticls(this, x, y);
 				
-				if (hasParticl && oppositeParticls >= DEFAULT_MIN_PARTICL_POPULATION && oppositeParticls <= this.settings.interval_life) {
+				if (hasParticl && oppositeParticls >= this.settings.min_interval_life && oppositeParticls <= this.settings.interval_life) {
 					newMap[y][x] = 1;
 				} else if (hasParticl == false && oppositeParticls == 3) {
 					newMap[y][x] = 1;

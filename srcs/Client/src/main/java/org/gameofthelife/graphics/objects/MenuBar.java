@@ -46,7 +46,7 @@ public class MenuBar extends JMenuBar{
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				//send refresh
-				Main.sockClient.sendMessage(new SetSettingsMessage(Main.mapX, Main.mapY, Main.refreshTime, Main.population_max_life));
+				Main.sockClient.sendMessage(new SetSettingsMessage(Main.mapX, Main.mapY, Main.refreshTime, Main.min_interval_life, Main.max_interval_life, Main.number_of_random_particls));
 			}
 
 			@Override
