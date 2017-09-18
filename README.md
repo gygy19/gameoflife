@@ -3,7 +3,7 @@ Le jeu de la vie est un automate cellulaire imaginé par John Horton Conway en 1
 
 Instructions :
 
-[embed]https://github.com/gygy19/gameoflife/blob/master/README.pdf[/embed]
+![alt text](https://github.com/gygy19/gameoflife/blob/master/README_txt.png)
 
 Diagramme UML
 
